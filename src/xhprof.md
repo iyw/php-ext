@@ -89,8 +89,8 @@ server {
     root        /Users/yarw/project/php/lib/xhprof_html;
     index       index.php;
 
-    access_log  /Users/yarw/project/php/yii/log/access.log;
-    error_log   /Users/yarw/project/php/yii/log/error.log;
+    access_log  /Users/yarw/project/php/xhprof/log/access.log;
+    error_log   /Users/yarw/project/php/xhprof/log/error.log;
 
     location / {
         # Redirect everything that isn't a real file to index.php
