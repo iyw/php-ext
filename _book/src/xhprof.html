@@ -1,0 +1,371 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>xhprof性能分析工具 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="best_xhprof.html" />
+    
+    
+    <link rel="prev" href="../" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2" data-path="xhprof.html">
+            
+                <a href="xhprof.html">
+            
+                    
+                    xhprof性能分析工具
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="best_xhprof.html">
+            
+                <a href="best_xhprof.html">
+            
+                    
+                    xhprof无缝接入项目
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >xhprof性能分析工具</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x6027;&#x80FD;&#x5206;&#x6790;&#x5DE5;&#x5177;xhprof">&#x6027;&#x80FD;&#x5206;&#x6790;&#x5DE5;&#x5177;xhprof</h1>
+<p>php7&#x4EE5;&#x524D;&#x7684;&#x7248;&#x672C;&#x4E0D;&#x7528;&#x591A;&#x8BF4;&#xFF0C;&#x7F51;&#x4E0A;&#x7684;&#x8D44;&#x6599;&#x5F88;&#x591A;&#xFF0C;&#x8FD9;&#x91CC;&#x4ECB;&#x7ECD;PHP7+ &#x7248;&#x672C;&#x7684;xhprof&#x5B89;&#x88C5;,&#x5E0C;&#x671B;&#x5BF9;&#x5927;&#x5BB6;&#x6709;&#x6240;&#x5E2E;&#x52A9;</p>
+<h4 id="1-&#x5B89;&#x88C5;&#x6269;&#x5C55;&#x6B64;&#x5904;&#x4E0D;&#x8BE6;&#x7EC6;&#x4ECB;&#x7ECD;&#x5B89;&#x88C5;&#x6269;&#x5C55;&#xFF0C;&#x53EA;&#x8D34;&#x51FA;&#x547D;&#x4EE4;">1. &#x5B89;&#x88C5;&#x6269;&#x5C55;(&#x6B64;&#x5904;&#x4E0D;&#x8BE6;&#x7EC6;&#x4ECB;&#x7ECD;&#x5B89;&#x88C5;&#x6269;&#x5C55;&#xFF0C;&#x53EA;&#x8D34;&#x51FA;&#x547D;&#x4EE4;)</h4>
+<pre><code class="lang-shell">git clone https://github.com/yaoguais/phpng-xhprof.git
+phpize
+./configure
+cp modules/phpng_xhprof.so  $(php-config --extension-dir)
+
+&#x6DFB;&#x52A0;&#x6269;&#x5C55;ini&#x6587;&#x4EF6;&#xFF0C;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;php --ini &#x67E5;&#x770B;&#x914D;&#x7F6E;&#x6587;&#x4EF6;
+touch /usr/local/etc/php/7.1/conf.d/ext-xhprof.ini
+&#x5728;ext-xhprof.ini&#x6587;&#x4EF6;&#x4E2D;&#x52A0;&#x5165;
+[xhprof]
+extension = &quot;phpng_xhprof.so&quot;
+xhprof.output_dir=/tmp/xhprof
+
+&#x8FD9;&#x6837;&#x6269;&#x5C55;&#x5C31;&#x5B89;&#x88C5;&#x597D;&#x4E86; &#x53EF;&#x4EE5;&#x901A;&#x8FC7;php -m | grep  xhprof &#x67E5;&#x770B;
+</code></pre>
+<h4 id="2-&#x6D4B;&#x8BD5;&#x6587;&#x4EF6;">2. &#x6D4B;&#x8BD5;&#x6587;&#x4EF6;</h4>
+<pre><code class="lang-php"><span class="hljs-meta">&lt;?php</span>
+xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">splitElem</span><span class="hljs-params">(&amp;$a, $low, $high)</span>
+</span>{
+    $split_elem = $a[$low];
+
+    <span class="hljs-keyword">for</span>(;;) {
+        <span class="hljs-keyword">while</span> ($low &lt; $high &amp;&amp; $a[$high] &gt;= $split_elem)
+            $high--;
+        <span class="hljs-keyword">if</span> ($low &gt;= $high) <span class="hljs-keyword">break</span>;
+        $a[$low++] = $a[$high];
+
+        <span class="hljs-keyword">while</span> ($low &lt; $high &amp;&amp; $a[$low] &lt;= $split_elem)
+            $low++;
+        <span class="hljs-keyword">if</span> ($low &gt;= $high) <span class="hljs-keyword">break</span>;
+        $a[$high--] = $a[$low];
+    }
+
+    $a[$low] = $split_elem;
+
+    <span class="hljs-keyword">return</span> $high;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">quickSort</span><span class="hljs-params">(&amp;$a, $low, $high)</span>
+</span>{
+    <span class="hljs-keyword">if</span> ($low &gt;= $high || <span class="hljs-keyword">empty</span>($a)) <span class="hljs-keyword">return</span>;
+
+    $split_elem_index = splitElem($a, $low, $high);
+    quickSort($a, $low, $split_elem_index - <span class="hljs-number">1</span>);
+    quickSort($a, $split_elem_index+<span class="hljs-number">1</span>, $high);
+}
+
+$a = <span class="hljs-keyword">array</span>();
+
+<span class="hljs-keyword">for</span> ($i = <span class="hljs-number">0</span>; $i &lt; <span class="hljs-number">30</span>; $i++) {
+    $a[] = rand(<span class="hljs-number">125</span>, <span class="hljs-number">250</span>);
+}
+
+quickSort($a, <span class="hljs-number">0</span>, count($a) - <span class="hljs-number">1</span>);
+$xhprofData = xhprof_disable();<span class="hljs-comment">// $xhprofData&#x662F;&#x6570;&#x7EC4;&#x5F62;&#x5F0F;&#x7684;&#x5206;&#x6790;&#x7ED3;&#x679C;</span>
+<span class="hljs-keyword">require_once</span> <span class="hljs-string">&quot;./lib/xhprof_lib/utils/xhprof_lib.php&quot;</span>;
+<span class="hljs-keyword">require_once</span> <span class="hljs-string">&quot;./lib/xhprof_lib/utils/xhprof_runs.php&quot;</span>;
+$xhprofRuns = <span class="hljs-keyword">new</span> XHProfRuns_Default();
+$runId = $xhprofRuns-&gt;save_run($xhprofData, <span class="hljs-string">&apos;test&apos;</span>);
+
+<span class="hljs-keyword">echo</span> <span class="hljs-string">&apos;http://xhprof.org/index.php?run=&apos;</span> . $runId . <span class="hljs-string">&apos;&amp;source=test&apos;</span>;
+</code></pre>
+<h4 id="&#x8FD9;&#x6837;&#x5C31;&#x597D;&#x4E86;&#x5417;&#xFF1F;-&#x5F53;&#x7136;&#x6CA1;&#x90A3;&#x4E48;&#x7B80;&#x5355;&#xFF0C;&#x4E0A;&#x9762;&#x9700;&#x8981;xhproflibphp&#x548C;xhprofrunsphp-&#x8FD9;&#x4E24;&#x4E2A;&#x6587;&#x4EF6;&#xFF0C;-&#x8FD8;&#x9700;&#x8981;&#x914D;&#x7F6E;&#x4E00;&#x4E2A;web&#x670D;&#x52A1;-xhproforg-&#xFF08;&#x5F53;&#x7136;&#x4F60;&#x4E5F;&#x53EF;&#x4EE5;&#x53EB;&#x5176;&#x5B83;&#x540D;&#xFF0C;&#x8FD9;&#x4E2A;&#x5FC3;&#x60C5;&#x4E86;&#xFF09;">&#x8FD9;&#x6837;&#x5C31;&#x597D;&#x4E86;&#x5417;&#xFF1F; &#x5F53;&#x7136;&#x6CA1;&#x90A3;&#x4E48;&#x7B80;&#x5355;&#xFF0C;&#x4E0A;&#x9762;&#x9700;&#x8981;xhprof_lib.php&#x548C;xhprof_runs.php &#x8FD9;&#x4E24;&#x4E2A;&#x6587;&#x4EF6;&#xFF0C; &#x8FD8;&#x9700;&#x8981;&#x914D;&#x7F6E;&#x4E00;&#x4E2A;web&#x670D;&#x52A1; xhprof.org &#xFF08;&#x5F53;&#x7136;&#x4F60;&#x4E5F;&#x53EF;&#x4EE5;&#x53EB;&#x5176;&#x5B83;&#x540D;&#xFF0C;&#x8FD9;&#x4E2A;&#x5FC3;&#x60C5;&#x4E86;&#xFF09;</h4>
+<pre><code class="lang-shell">&#x53BB;clone&#x4E00;&#x4E2A;php5.6&#x4F7F;&#x7528;&#x7684;&#x7248;&#x672C;&#x5C31;&#x597D;&#x4E86;
+
+git clone https://github.com/phacility/xhprof.git
+
+&#x590D;&#x5236;&#x91CC;&#x9762;&#x4E24;&#x4E2A;&#x6587;&#x4EF6;&#x5939; xhprof_html  &#x548C;xhprof_lib &#x5230;./lib &#x6587;&#x4EF6;&#x5939;&#xFF0C;&#x5F53;&#x7136;&#x4E5F;&#x53EF;&#x4EE5;&#x4E0D;&#x590D;&#x5236;,&#x80FD;require&#x5230;&#x5C31;&#x884C;
+
+&#x5C06;xhprof_html&#x76EE;&#x5F55;&#x914D;&#x7F6E;root&#x76EE;&#x5F55;&#xFF0C;&#x4E0B;&#x9762;&#x8D34;&#x4E00;&#x4E0B;nginx&#x914D;&#x7F6E;&#x4EC5;&#x4F9B;&#x53C2;&#x8003;
+server {
+    charset utf-8;
+    client_max_body_size 128M;
+
+    listen 80; ## listen for ipv4
+    #listen [::]:80 default_server ipv6only=on; ## listen for ipv6
+
+    server_name xhprof.org;
+    root        /Users/yarw/project/php/lib/xhprof_html;
+    index       index.php;
+
+    access_log  /Users/yarw/project/php/xhprof/log/access.log;
+    error_log   /Users/yarw/project/php/xhprof/log/error.log;
+
+    location / {
+        # Redirect everything that isn&apos;t a real file to index.php
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    # uncomment to avoid processing of calls to non-existing static files by Yii
+    #location ~ \.(js|css|png|jpg|gif|swf|ico|pdf|mov|fla|zip|rar)$ {
+    #    try_files $uri =404;
+    #}
+    #error_page 404 /404.html;
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass 127.0.0.1:9000;
+        #fastcgi_pass unix:/var/run/php5-fpm.sock;
+        try_files $uri =404;
+    }
+
+    location ~* /\. {
+        deny all;
+    }
+}
+</code></pre>
+<p>&#x795D;&#x5B89;&#x88C5;&#x987A;&#x5229;~~</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../" class="navigation navigation-prev " aria-label="Previous page: Introduction">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="best_xhprof.html" class="navigation navigation-next " aria-label="Next page: xhprof无缝接入项目">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"xhprof性能分析工具","level":"1.2","depth":1,"next":{"title":"xhprof无缝接入项目","level":"1.3","depth":1,"path":"src/best_xhprof.md","ref":"src/best_xhprof.md","articles":[]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"src/xhprof.md","mtime":"2017-07-16T05:32:35.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-16T06:06:40.844Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
