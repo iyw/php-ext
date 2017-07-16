@@ -229,29 +229,30 @@ server {
 }
 </code></pre>
 <h4 id="&#x91CD;&#x8981;&#x7684;&#x6B65;&#x9AA4;&#x6765;&#x4E86;&#xFF0C;&#x8FDB;&#x5165;xhprof&#x673A;&#x5236;&#xFF0C;&#x8BBE;&#x7F6E;&#x5F00;&#x5173;&#xFF0C;&#x770B;&#x4E0B;&#x9762;&#x4EE3;&#x7801;">&#x91CD;&#x8981;&#x7684;&#x6B65;&#x9AA4;&#x6765;&#x4E86;&#xFF0C;&#x8FDB;&#x5165;xhprof&#x673A;&#x5236;&#xFF0C;&#x8BBE;&#x7F6E;&#x5F00;&#x5173;&#xFF0C;&#x770B;&#x4E0B;&#x9762;&#x4EE3;&#x7801;</h4>
-<pre><code>&#x7F16;&#x8F91;vim /data0/www/xhprof/xhprof.php
+<pre><code class="lang-php">&#x7F16;&#x8F91;vim /data0/www/xhprof/xhprof.php
 &#x5176;&#x5B9E;&#x6838;&#x5FC3;&#x5C31;&#x662F;&#x6CE8;&#x518C;&#x4E00;&#x4E2A;register_shutdown_function
 
-&lt;?php
-if (isset($_REQUEST[&apos;xhprof&apos;]) &amp;&amp; $_REQUEST[&apos;xhprof&apos;] = 1) {
+<span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>($_REQUEST[<span class="hljs-string">&apos;xhprof&apos;</span>]) &amp;&amp; $_REQUEST[<span class="hljs-string">&apos;xhprof&apos;</span>] = <span class="hljs-number">1</span>) {
     xhprof_enable(XHPROF_FLAGS_MEMORY | XHPROF_FLAGS_CPU);
-    register_shutdown_function(function() {
+    register_shutdown_function(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
         $xhprof_data = xhprof_disable();
-        if (function_exists(&apos;fastcgi_finish_request&apos;)) {
+        <span class="hljs-keyword">if</span> (function_exists(<span class="hljs-string">&apos;fastcgi_finish_request&apos;</span>)) {
             fastcgi_finish_request();
         }
-        include_once &quot;/data0/www/xhprof/xhprof_lib/utils/xhprof_lib.php&quot;;
-        include_once &quot;/data0/www/xhprof/xhprof_lib/utils/xhprof_runs.php&quot;;
-        $xhprof_runs = new XHProfRuns_Default();
-        $run_id = $xhprof_runs-&gt;save_run($xhprof_data, &apos;test&apos;);
-        file_put_contents(&apos;/data0/www/xhprof/xhprof.txt&apos;, &apos;http://xhprof.org/index.php?run=&apos; . $run_id . &apos;&amp;source=test&apos;.&apos;\n&apos;);
+        <span class="hljs-keyword">include_once</span> <span class="hljs-string">&quot;/data0/www/xhprof/xhprof_lib/utils/xhprof_lib.php&quot;</span>;
+        <span class="hljs-keyword">include_once</span> <span class="hljs-string">&quot;/data0/www/xhprof/xhprof_lib/utils/xhprof_runs.php&quot;</span>;
+        $xhprof_runs = <span class="hljs-keyword">new</span> XHProfRuns_Default();
+        $run_id = $xhprof_runs-&gt;save_run($xhprof_data, <span class="hljs-string">&apos;test&apos;</span>);
+        file_put_contents(<span class="hljs-string">&apos;/data0/www/xhprof/xhprof.txt&apos;</span>, <span class="hljs-string">&apos;http://xhprof.org/index.php?run=&apos;</span> . $run_id . <span class="hljs-string">&apos;&amp;source=test&apos;</span>.<span class="hljs-string">&apos;\n&apos;</span>);
     });
 }
 
-&#x7136;&#x540E;&#x5728;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x52A0;&#x5165; /usr/local/etc/php/7.1/conf.d/ext-xhprof.ini
+&#x7136;&#x540E;&#x5728;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x52A0;&#x5165; /usr/local/etc/php/<span class="hljs-number">7.1</span>/conf.d/ext-xhprof.ini
 &#x6307;&#x4EE4;
-auto_prepend_file=&apos;/data0/www/xhprof/xhprof.php&apos; //&#x91CD;&#x70B9;&#x5C31;&#x5728;&#x8FD9;&#xFF0C;&#x4E00;&#x4E2A;&#x8BF7;&#x6C42;&#x751F;&#x547D;&#x5468;&#x671F;&#x5F00;&#x59CB;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x81EA;&#x52A8;&#x5F15;&#x5165;&#x8FD9;&#x4E2A;&#x6587;&#x4EF6;&#xFF0C;&#x6211;&#x4EEC;&#x53EA;&#x9700;&#x5728;&#x53C2;&#x6570;&#x540E;&#x9762;&#x52A0;&#x4E0A;xhprof=1 &#x5373;&#x53EF;&#xFF01;
-</code></pre><h4 id="&#x770B;&#x4E00;&#x770B;&#x6700;&#x7EC8;&#x6548;&#x679C;&#xFF0C;verygood">&#x770B;&#x4E00;&#x770B;&#x6700;&#x7EC8;&#x6548;&#x679C;&#xFF0C;verygood</h4>
+auto_prepend_file=<span class="hljs-string">&apos;/data0/www/xhprof/xhprof.php&apos;</span> <span class="hljs-comment">//&#x91CD;&#x70B9;&#x5C31;&#x5728;&#x8FD9;&#xFF0C;&#x4E00;&#x4E2A;&#x8BF7;&#x6C42;&#x751F;&#x547D;&#x5468;&#x671F;&#x5F00;&#x59CB;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x81EA;&#x52A8;&#x5F15;&#x5165;&#x8FD9;&#x4E2A;&#x6587;&#x4EF6;&#xFF0C;&#x6211;&#x4EEC;&#x53EA;&#x9700;&#x5728;&#x53C2;&#x6570;&#x540E;&#x9762;&#x52A0;&#x4E0A;xhprof=1 &#x5373;&#x53EF;&#xFF01;</span>
+</code></pre>
+<h4 id="&#x770B;&#x4E00;&#x770B;&#x6700;&#x7EC8;&#x6548;&#x679C;&#xFF0C;verygood">&#x770B;&#x4E00;&#x770B;&#x6700;&#x7EC8;&#x6548;&#x679C;&#xFF0C;verygood</h4>
 <p><img src="../images/xhprof_1.png" alt="&#x63A5;&#x53E3;&#x8BBF;&#x95EE;">
 <img src="../images/xhprof_2.png" alt="&#x6548;&#x679C;">
 <img src="../images/xhprof_3.png" alt="&#x6548;&#x679C;2"></p>
@@ -294,7 +295,7 @@ auto_prepend_file=&apos;/data0/www/xhprof/xhprof.php&apos; //&#x91CD;&#x70B9;&#x
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"xhprof无缝接入项目","level":"1.3","depth":1,"previous":{"title":"xhprof性能分析工具","level":"1.2","depth":1,"path":"src/xhprof.md","ref":"src/xhprof.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"src/best_xhprof.md","mtime":"2017-07-16T06:09:39.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-16T06:06:40.844Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"xhprof无缝接入项目","level":"1.3","depth":1,"previous":{"title":"xhprof性能分析工具","level":"1.2","depth":1,"path":"src/xhprof.md","ref":"src/xhprof.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"src/best_xhprof.md","mtime":"2017-07-16T06:16:10.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-16T06:06:40.844Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

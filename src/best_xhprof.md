@@ -63,7 +63,7 @@ server {
 
 ####重要的步骤来了，进入xhprof机制，设置开关，看下面代码
 
-```
+```php
 编辑vim /data0/www/xhprof/xhprof.php
 其实核心就是注册一个register_shutdown_function
 
