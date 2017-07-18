@@ -1,0 +1,345 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>使用gdb调试php-fpm · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="best_xhprof.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="xhprof.html">
+            
+                <a href="xhprof.html">
+            
+                    
+                    xhprof性能分析工具
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="best_xhprof.html">
+            
+                <a href="best_xhprof.html">
+            
+                    
+                    xhprof无缝接入项目
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4" data-path="gdb_fpm.html">
+            
+                <a href="gdb_fpm.html">
+            
+                    
+                    使用gdb调试php-fpm
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >使用gdb调试php-fpm</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="&#x4F7F;&#x7528;gdb&#x8C03;&#x8BD5;fpm">&#x4F7F;&#x7528;gdb&#x8C03;&#x8BD5;fpm</h2>
+<h4 id="1&#x80CC;&#x666F;">1.&#x80CC;&#x666F;</h4>
+<p>&#x6700;&#x8FD1;&#x7EBF;&#x4E0A;&#x53D1;&#x73B0;&#x4E00;&#x4E2A;&#x5947;&#x8469;&#x95EE;&#x9898;&#x3001;opcache_reset &#x6E05;&#x7406;cache&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5BFC;&#x81F4;php-fpm&#x8FDB;&#x7A0B;&#x6740;&#x6389;,&#x51FA;&#x73B0;&#x6BB5;&#x9519;&#x8BEF;&#xFF0C;&#x770B;&#x62A5;&#x9519;&#xFF1A;</p>
+<pre><code class="lang-shell">[17-Jul-2017 22:31:29] WARNING: [pool linkapi.fang.lianjia.com] child 10306 said into stderr: &quot;zend_mm_heap corrupted&quot;
+[17-Jul-2017 22:31:29] WARNING: [pool linkapi.fang.lianjia.com] child 10306 exited with code 1 after 0.373182 seconds from start
+[17-Jul-2017 22:31:29] NOTICE: [pool linkapi.fang.lianjia.com] child 10309 started
+[17-Jul-2017 22:31:30] WARNING: [pool linkapi.fang.lianjia.com] child 10309 exited on signal 11 (SIGSEGV - core dumped) after 0.807603 seconds from start
+</code></pre>
+<h4 id="2&#x8BBE;&#x7F6E;coredump">2.&#x8BBE;&#x7F6E;coredump</h4>
+<pre><code class="lang-shell">core&#x6587;&#x4EF6;&#x5B58;&#x50A8;&#x8DEF;&#x5F84;&#x548C;&#x683C;&#x5F0F;
+echo &quot;/tmp/core-%e-%p&quot; &gt; /proc/sys/kernel/core_pattern
+
+&#x63A7;&#x5236;pid&#x662F;&#x5426;&#x4F5C;&#x4E3A;&#x6269;&#x5C55;&#x540D;
+echo &quot;1&quot; &gt; /proc/sys/kernel/core_uses_pid
+
+&#x66F4;&#x6539;&#x5927;&#x5C0F;&#x9650;&#x5236;,&#x4E0D;&#x7136;core&#x6587;&#x4EF6;&#x751F;&#x6210;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x88AB;&#x622A;&#x65AD;
+&#x5728;&#x6587;&#x4EF6; /etc/security/limits.conf&#x4E2D;&#x52A0;&#x5165;
+
+# End of file
+* soft nofile 65534
+* hard nofile 65534
+* soft core unlimited
+* hard core unlimited
+
+
+&#x9000;&#x51FA;&#x7EC8;&#x7AEF;&#x518D;&#x91CD;&#x65B0;&#x8FDB;&#x5165;&#x751F;&#x6548; &#x8F93;&#x5165;&#x4E0B;&#x9762;&#x547D;&#x4EE4;&#x63D0;&#x793A;unlimited  &#x5C31;&#x5BF9;&#x4E86;
+[root@lianjia ~]# ulimit -c
+unlimited
+</code></pre>
+<h4 id="3&#x8BBE;&#x7F6E;php-fpm">3.&#x8BBE;&#x7F6E;php-fpm</h4>
+<pre><code class="lang-shell">
+vim /usr/local/matrix/etc/php-fpm.conf
+&#x627E;&#x7684;&#x5173;&#x952E;&#x5B57; rlimit_core  &#x5E76;&#x4FEE;&#x6539;&#x4E3A;
+
+rlimit_core = unlimited
+
+&#x91CD;&#x542F;fpm
+</code></pre>
+<h4 id="4&#x8FFD;&#x8E2A;">4.&#x8FFD;&#x8E2A;</h4>
+<p>&#x6D4B;&#x8BD5;&#x5B8C;&#xFF0C;&#x5728;/tmp&#x76EE;&#x5F55;&#x4E0B;&#x9762;&#x5DF2;&#x7ECF;&#x751F;&#x6210;&#x4E00;&#x4E9B;core&#x6587;&#x4EF6;</p>
+<pre><code>[root@lianjia ~]# tree /tmp
+/tmp
+&#x251C;&#x2500;&#x2500; core-php-fpm.16568
+&#x251C;&#x2500;&#x2500; core-php-fpm.4990
+&#x251C;&#x2500;&#x2500; core-php-fpm.5953
+&#x251C;&#x2500;&#x2500; core-php-fpm.6031
+&#x251C;&#x2500;&#x2500; core-php-fpm.6866
+&#x2514;&#x2500;&#x2500; pear
+    &#x2514;&#x2500;&#x2500; temp
+
+    2 directories, 5 files
+</code></pre><p>&#x6267;&#x884C;&#x547D;&#x4EE4;</p>
+<pre><code>gdb /usr/local/matrix/sbin/php-fpm  /tmp/core-php-fpm.6031
+</code></pre><p>&#x7528;bt&#x5C31;&#x53EF;&#x4EE5;&#x67E5;&#x770B;&#x65E5;&#x5FD7;&#x4E86;</p>
+<pre><code>Reading symbols from /usr/local/matrix/lib/php/extensions/no-debug-non-zts-20121212/yar.so...(no debugging symbols found)...done.
+Loaded symbols for /usr/local/matrix/lib/php/extensions/no-debug-non-zts-20121212/yar.so
+Reading symbols from /usr/local/matrix/lib/php/extensions/no-debug-non-zts-20121212/yac.so...(no debugging symbols found)...done.
+Loaded symbols for /usr/local/matrix/lib/php/extensions/no-debug-non-zts-20121212/yac.so
+Reading symbols from /usr/local/matrix/lib/php/extensions/no-debug-non-zts-20121212/phalcon.so...(no debugging symbols found)...done.
+Loaded symbols for /usr/local/matrix/lib/php/extensions/no-debug-non-zts-20121212/phalcon.so
+Reading symbols from /lib64/libnss_files.so.2...Reading symbols from /usr/lib/debug/lib64/libnss_files-2.12.so.debug...done.
+done.
+Loaded symbols for /lib64/libnss_files.so.2
+Core was generated by `php-fpm: pool linkapi.fang.lianjia.com                                        &apos;.
+Program terminated with signal 11, Segmentation fault.
+#0  zend_mm_add_to_free_list (heap=&lt;value optimized out&gt;, mm_block=0x7f517b15f0f8) at /root/build/php-5.5.38/Zend/zend_alloc.c:752
+752                 if (ZEND_MM_FREE_BLOCK_SIZE(prev) != size) {
+    Missing separate debuginfos, use: debuginfo-install matrix-php-5.5.38-3.x86_64
+        (gdb) bt
+#0  zend_mm_add_to_free_list (heap=&lt;value optimized out&gt;, mm_block=0x7f517b15f0f8) at /root/build/php-5.5.38/Zend/zend_alloc.c:752
+#1  0x00000000006a9cd2 in _zend_mm_free_int (heap=0x26b2330, p=0x7f517b15f5a8) at /root/build/php-5.5.38/Zend/zend_alloc.c:2118
+#2  0x00000000006ddff1 in zend_hash_destroy (ht=0x7f517b15f040) at /root/build/php-5.5.38/Zend/zend_hash.c:565
+#3  0x0000000000781212 in fcgi_close (req=0x7ffe1830bbc0, force=&lt;value optimized out&gt;, destroy=&lt;value optimized out&gt;)
+            at /root/build/php-5.5.38/sapi/fpm/fpm/fastcgi.c:726
+#4  0x000000000078174f in fcgi_finish_request (req=0x7ffe1830bbc0, force_close=0) at /root/build/php-5.5.38/sapi/fpm/fpm/fastcgi.c:1078
+#5  0x0000000000789a62 in sapi_cgi_deactivate () at /root/build/php-5.5.38/sapi/fpm/fpm/fpm_main.c:851
+#6  0x000000000067babc in sapi_deactivate () at /root/build/php-5.5.38/main/SAPI.c:536
+#7  0x0000000000672385 in php_request_shutdown (dummy=&lt;value optimized out&gt;) at /root/build/php-5.5.38/main/main.c:1822
+#8  0x000000000078ab49 in main (argc=&lt;value optimized out&gt;, argv=&lt;value optimized out&gt;) at /root/build/php-5.5.38/sapi/fpm/fpm/fpm_main.c:1981
+</code></pre>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="best_xhprof.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: xhprof无缝接入项目">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"使用gdb调试php-fpm","level":"1.4","depth":1,"previous":{"title":"xhprof无缝接入项目","level":"1.3","depth":1,"path":"src/best_xhprof.md","ref":"src/best_xhprof.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"src/gdb_fpm.md","mtime":"2017-07-18T07:03:14.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-18T07:04:50.116Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
