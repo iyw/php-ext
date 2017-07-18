@@ -3,6 +3,7 @@
 ####1.背景
 最近线上发现一个奇葩问题、opcache_reset 清理cache的时候，导致php-fpm进程杀掉,出现段错误，看报错：
 
+php-fpm报错如下
 ```shell
 [17-Jul-2017 22:31:29] WARNING: [pool linkapi.fang.lianjia.com] child 10306 said into stderr: "zend_mm_heap corrupted"
 [17-Jul-2017 22:31:29] WARNING: [pool linkapi.fang.lianjia.com] child 10306 exited with code 1 after 0.373182 seconds from start
@@ -10,6 +11,12 @@
 [17-Jul-2017 22:31:30] WARNING: [pool linkapi.fang.lianjia.com] child 10309 exited on signal 11 (SIGSEGV - core dumped) after 0.807603 seconds from start
 ```
 
+nginx错误日志报错如下
+
+```
+2017/07/18 12:03:40 [error] 16253#0: *149718 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 10.33.73.2, server: dev.linkapi.lianjia.com, request: "GET /api/link/agentinfo?agent_id=1000000020205158 HTTP/1.0", upstream: "fastcgi://127.0.0.1:9040", host: "dev.linkapi.lianjia.com"
+2017/07/18 12:03:40 [error] 16253#0: *149645 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 10.33.73.2, server: dev.linkapi.lianjia.com, request: "GET /api/link/agentinfo?agent_id=1000000020205158 HTTP/1.0", upstream: "fastcgi://127.0.0.1:9040", host: "dev.linkapi.lianjia.com"
+```
 ####2.设置coredump
 
 ```shell
