@@ -57,6 +57,8 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
+    <link rel="next" href="gitbook.html" />
+    
     
     <link rel="prev" href="best_xhprof.html" />
     
@@ -139,6 +141,32 @@
             
         </li>
     
+        <li class="chapter " data-level="1.5" data-path="gitbook.html">
+            
+                <a href="gitbook.html">
+            
+                    
+                    gitbook使用教程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="uml.html">
+            
+                <a href="uml.html">
+            
+                    
+                    UML工具破解
+            
+                </a>
+            
+
+            
+        </li>
+    
 
     
 
@@ -187,12 +215,16 @@
                                 <h2 id="&#x4F7F;&#x7528;gdb&#x8C03;&#x8BD5;fpm">&#x4F7F;&#x7528;gdb&#x8C03;&#x8BD5;fpm</h2>
 <h4 id="1&#x80CC;&#x666F;">1.&#x80CC;&#x666F;</h4>
 <p>&#x6700;&#x8FD1;&#x7EBF;&#x4E0A;&#x53D1;&#x73B0;&#x4E00;&#x4E2A;&#x5947;&#x8469;&#x95EE;&#x9898;&#x3001;opcache_reset &#x6E05;&#x7406;cache&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5BFC;&#x81F4;php-fpm&#x8FDB;&#x7A0B;&#x6740;&#x6389;,&#x51FA;&#x73B0;&#x6BB5;&#x9519;&#x8BEF;&#xFF0C;&#x770B;&#x62A5;&#x9519;&#xFF1A;</p>
+<p>php-fpm&#x62A5;&#x9519;&#x5982;&#x4E0B;</p>
 <pre><code class="lang-shell">[17-Jul-2017 22:31:29] WARNING: [pool linkapi.fang.lianjia.com] child 10306 said into stderr: &quot;zend_mm_heap corrupted&quot;
 [17-Jul-2017 22:31:29] WARNING: [pool linkapi.fang.lianjia.com] child 10306 exited with code 1 after 0.373182 seconds from start
 [17-Jul-2017 22:31:29] NOTICE: [pool linkapi.fang.lianjia.com] child 10309 started
 [17-Jul-2017 22:31:30] WARNING: [pool linkapi.fang.lianjia.com] child 10309 exited on signal 11 (SIGSEGV - core dumped) after 0.807603 seconds from start
 </code></pre>
-<h4 id="2&#x8BBE;&#x7F6E;coredump">2.&#x8BBE;&#x7F6E;coredump</h4>
+<p>nginx&#x9519;&#x8BEF;&#x65E5;&#x5FD7;&#x62A5;&#x9519;&#x5982;&#x4E0B;</p>
+<pre><code>2017/07/18 12:03:40 [error] 16253#0: *149718 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 10.33.73.2, server: dev.linkapi.lianjia.com, request: &quot;GET /api/link/agentinfo?agent_id=1000000020205158 HTTP/1.0&quot;, upstream: &quot;fastcgi://127.0.0.1:9040&quot;, host: &quot;dev.linkapi.lianjia.com&quot;
+2017/07/18 12:03:40 [error] 16253#0: *149645 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 10.33.73.2, server: dev.linkapi.lianjia.com, request: &quot;GET /api/link/agentinfo?agent_id=1000000020205158 HTTP/1.0&quot;, upstream: &quot;fastcgi://127.0.0.1:9040&quot;, host: &quot;dev.linkapi.lianjia.com&quot;
+</code></pre><h4 id="2&#x8BBE;&#x7F6E;coredump">2.&#x8BBE;&#x7F6E;coredump</h4>
 <pre><code class="lang-shell">core&#x6587;&#x4EF6;&#x5B58;&#x50A8;&#x8DEF;&#x5F84;&#x548C;&#x683C;&#x5F0F;
 echo &quot;/tmp/core-%e-%p&quot; &gt; /proc/sys/kernel/core_pattern
 
@@ -290,10 +322,14 @@ Program terminated with signal 11, Segmentation fault.
 
             
                 
-                <a href="best_xhprof.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: xhprof无缝接入项目">
+                <a href="best_xhprof.html" class="navigation navigation-prev " aria-label="Previous page: xhprof无缝接入项目">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
+                
+                <a href="gitbook.html" class="navigation navigation-next " aria-label="Next page: gitbook使用教程">
+                    <i class="fa fa-angle-right"></i>
+                </a>
                 
             
         
@@ -302,7 +338,7 @@ Program terminated with signal 11, Segmentation fault.
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"使用gdb调试php-fpm","level":"1.4","depth":1,"previous":{"title":"xhprof无缝接入项目","level":"1.3","depth":1,"path":"src/best_xhprof.md","ref":"src/best_xhprof.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"src/gdb_fpm.md","mtime":"2017-07-18T07:03:14.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-18T07:04:50.116Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"使用gdb调试php-fpm","level":"1.4","depth":1,"next":{"title":"gitbook使用教程","level":"1.5","depth":1,"path":"src/gitbook.md","ref":"src/gitbook.md","articles":[]},"previous":{"title":"xhprof无缝接入项目","level":"1.3","depth":1,"path":"src/best_xhprof.md","ref":"src/best_xhprof.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"src/gdb_fpm.md","mtime":"2017-07-18T07:17:19.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-28T08:38:55.833Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
