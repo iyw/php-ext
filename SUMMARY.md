@@ -6,5 +6,6 @@
 * [使用gdb调试php-fpm](src/gdb_fpm.md)
 * [gitbook使用教程](src/gitbook.md)
 * [UML工具破解](src/uml.md)
+* [PHP基础小谈](src/php.md)
 
 
